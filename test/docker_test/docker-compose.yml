@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  tarantool:
+    image: tarantool/tarantool:latest
+    container_name: test_tarantool
+    restart: always
+    environment:
+      TARANTOOL_USER: root
+      TARANTOOL_PASS: root
+    ports:
+      - "3302:3302"
+    volumes:
+      - ./init/test_init.lua:/etc/tarantool/init.lua
+      - tarantool_data:/var/lib/tarantool
+    command: "tarantool /etc/tarantool/init.lua"
+
+volumes:
+  tarantool_data:

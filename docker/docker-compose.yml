@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: mattermost
+      POSTGRES_USER: mmuser
+      POSTGRES_PASSWORD: mmuser_password
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - mattermost_network
+
+  app:
+    image: mattermost/mattermost-team-edition:latest
+    restart: always
+    environment:
+      MM_SQLSETTINGS_DRIVERNAME: postgres
+      MM_SQLSETTINGS_DATASOURCE: postgres://mmuser:mmuser_password@db:5432/mattermost?sslmode=disable
+      MM_SERVICESETTINGS_SITEURL: http://localhost:8065
+    depends_on:
+      - db
+      - tarantool
+    ports:
+      - "8065:8065"
+    volumes:
+      - mattermost_data:/mattermost/data
+      - mattermost_logs:/mattermost/logs
+      - mattermost_config:/mattermost/config
+      - mattermost_plugins:/mattermost/plugins
+      - mattermost_client_plugins:/mattermost/client/plugins
+      - mattermost_bleve_indexes:/mattermost/bleve-indexes
+      - ./config.json:/mattermost/config/config.json
+    networks:
+      - mattermost_network
+
+  tarantool:
+    image: tarantool/tarantool:latest
+    container_name: tarantool
+    restart: always
+    environment:
+      TARANTOOL_USER: root
+      TARANTOOL_PASS: root
+    ports:
+      - "3301:3301"
+    volumes:
+      - ./init/init.lua:/etc/tarantool/init.lua
+      - tarantool_data:/var/lib/tarantool
+    command: "tarantool /etc/tarantool/init.lua"
+    networks:
+      - mattermost_network
+
+volumes:
+  db_data:
+  mattermost_data:
+  mattermost_logs:
+  mattermost_config:
+  mattermost_plugins:
+  mattermost_client_plugins:
+  mattermost_bleve_indexes:
+  tarantool_data:
+
+networks:
+  mattermost_network:
+    driver: bridge

@@ -1,0 +1,19 @@
+{
+  "id": "com.mattermost.voteplugin",
+  "name": "Vote Plugin",
+  "description": "A voting plugin for Mattermost",
+  "version": "1.0.0",
+  "server": {
+    "executable": "server/mattermost-voting-bot.so"
+  },
+  "settings_schema": {
+    "settings": [
+      {
+        "key": "Trigger",
+        "display_name": "Trigger Word:",
+        "type": "text",
+        "default": "/vote"
+      }
+    ]
+  }
+}

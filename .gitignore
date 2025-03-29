@@ -11,8 +11,6 @@
 Thumbs.db
 *.log
 *.conf
-*.json
-*.yml
 *.yaml
 *.env
 credentials.json
