@@ -65,18 +65,29 @@ func (s *VoteStorage) Vote(voteId uint32, votedId string, answers []string) erro
 	zeroTime := time.Date(1970, time.January, 1, 0, 0, 0, 0, time.UTC)
 	if expiresAt.UTC() != zeroTime && time.Now().After(expiresAt) {
 		updatingVote[5] = false
+		voteModel := models.NewVoteTarantoolModel(
+			updatingVote[0],
+			updatingVote[1],
+			updatingVote[2],
+			updatingVote[3],
+			updatingVote[4],
+			updatingVote[5],
+			updatingVote[6],
+			updatingVote[7],
+			updatingVote[8],
+		)
 		_, _ = s.conn.Do(
 			tarantool.NewReplaceRequest("votes").
 				Tuple([]interface{}{
-					updatingVote[0],
-					updatingVote[1],
-					updatingVote[2],
-					updatingVote[3],
-					updatingVote[4],
-					updatingVote[5],
-					updatingVote[6],
-					updatingVote[7],
-					updatingVote[8],
+					voteModel.Id,
+					voteModel.CreatorId,
+					voteModel.Question,
+					voteModel.Answers,
+					voteModel.Votes,
+					voteModel.IsActive,
+					voteModel.IsMultipleAnswers,
+					voteModel.IsAnonymous,
+					voteModel.ExpiresAt,
 				}),
 		).Get()
 		return errors.New("the voting completed")
@@ -119,18 +130,29 @@ func (s *VoteStorage) Vote(voteId uint32, votedId string, answers []string) erro
 
 	updatingVote[4] = votes
 
+	voteModel := models.NewVoteTarantoolModel(
+		updatingVote[0],
+		updatingVote[1],
+		updatingVote[2],
+		updatingVote[3],
+		updatingVote[4],
+		updatingVote[5],
+		updatingVote[6],
+		updatingVote[7],
+		updatingVote[8],
+	)
 	_, err = s.conn.Do(
 		tarantool.NewReplaceRequest("votes").
 			Tuple([]interface{}{
-				updatingVote[0],
-				updatingVote[1],
-				updatingVote[2],
-				updatingVote[3],
-				updatingVote[4],
-				updatingVote[5],
-				updatingVote[6],
-				updatingVote[7],
-				updatingVote[8],
+				voteModel.Id,
+				voteModel.CreatorId,
+				voteModel.Question,
+				voteModel.Answers,
+				voteModel.Votes,
+				voteModel.IsActive,
+				voteModel.IsMultipleAnswers,
+				voteModel.IsAnonymous,
+				voteModel.ExpiresAt,
 			}),
 	).Get()
 
@@ -180,17 +202,28 @@ func (s *VoteStorage) CloseVote(voteId uint32, creatorId string) error {
 	updatedVote := vote[0].([]interface{})
 	updatedVote[5] = false
 
+	voteModel := models.NewVoteTarantoolModel(
+		updatedVote[0],
+		updatedVote[1],
+		updatedVote[2],
+		updatedVote[3],
+		updatedVote[4],
+		updatedVote[5],
+		updatedVote[6],
+		updatedVote[7],
+		updatedVote[8],
+	)
 	_, err = s.conn.Do(tarantool.NewReplaceRequest("votes").
 		Tuple([]interface{}{
-			updatedVote[0],
-			updatedVote[1],
-			updatedVote[2],
-			updatedVote[3],
-			updatedVote[4],
-			updatedVote[5],
-			updatedVote[6],
-			updatedVote[7],
-			updatedVote[8],
+			voteModel.Id,
+			voteModel.CreatorId,
+			voteModel.Question,
+			voteModel.Answers,
+			voteModel.Votes,
+			voteModel.IsActive,
+			voteModel.IsMultipleAnswers,
+			voteModel.IsAnonymous,
+			voteModel.ExpiresAt,
 		}),
 	).Get()
 	return err
@@ -251,18 +284,29 @@ func (s *VoteStorage) AutoCloseExpiredVotes() error {
 		zeroTime := time.Date(1970, time.January, 1, 0, 0, 0, 0, time.UTC)
 		if expiresAt.UTC() != zeroTime && isActive && time.Now().After(expiresAt) {
 			vote[5] = false
+			voteModel := models.NewVoteTarantoolModel(
+				vote[0],
+				vote[1],
+				vote[2],
+				vote[3],
+				vote[4],
+				vote[5],
+				vote[6],
+				vote[7],
+				vote[8],
+			)
 			_, _ = s.conn.Do(
 				tarantool.NewReplaceRequest("votes").
 					Tuple([]interface{}{
-						vote[0],
-						vote[1],
-						vote[2],
-						vote[3],
-						vote[4],
-						vote[5],
-						vote[6],
-						vote[7],
-						vote[8],
+						voteModel.Id,
+						voteModel.CreatorId,
+						voteModel.Question,
+						voteModel.Answers,
+						voteModel.Votes,
+						voteModel.IsActive,
+						voteModel.IsMultipleAnswers,
+						voteModel.IsAnonymous,
+						voteModel.ExpiresAt,
 					}),
 			).Get()
 		}

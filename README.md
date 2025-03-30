@@ -80,7 +80,7 @@
 git clone https://github.com/Dmitrii-Dmitrii/mattermost-voting-bot.git
 cd mattermost-voting-bot
 ```
-Далее нужно перейти в директорию `/docker`. Внутри нее находится [`docker-compose.yml`](), который отвечает за развертывание Mattermost и Tarantool. Его нужно запустить:
+Далее нужно перейти в директорию `/docker`. Внутри нее находится `docker-compose.yml`, который отвечает за развертывание Mattermost и Tarantool. Его нужно запустить:
 ```
 cd docker
 docker-compose up -d
@@ -89,7 +89,7 @@ docker-compose up -d
 
 ### Запуск тестов
 
-Для тестов также используется [`docker-compose.yml`](), который находится в `./test/docker_test`, он используется для развертывания Tarantool. Однако в данном случае запускать [`docker-compose.yml`]() не нужно, это встроено в тесты. Для их запуска нужно выполнить следующие команды:
+Для тестов также используется `docker-compose.yml`, который находится в `./test/docker_test`, он используется для развертывания Tarantool. Однако в данном случае запускать `docker-compose.yml` не нужно, это встроено в тесты. Для их запуска нужно выполнить следующие команды:
 - `storage_test`
 ```
 cd test

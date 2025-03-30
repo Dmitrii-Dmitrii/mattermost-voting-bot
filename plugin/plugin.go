@@ -34,6 +34,7 @@ func (p *VotePlugin) OnActivate() error {
 		Description:      "Vote plugin for creating and managing polls",
 		DisplayName:      "Vote Plugin",
 	})
+
 	if err != nil {
 		return fmt.Errorf("failed to register command: %w", err)
 	}
@@ -87,15 +88,18 @@ func (p *VotePlugin) ExecuteCommand(_ *plugin.Context, args *model.CommandArgs) 
 
 		isMultipleAnswers := flags["--multiple-answers"] == "true"
 		isAnonymous := flags["--anonymous"] == "true"
+
 		var expiresAt *time.Time
 		if exp, ok := flags["--expires-at"]; ok {
 			t, err := time.Parse(time.RFC3339, exp)
 			if err != nil {
 				return &model.CommandResponse{Text: "Invalid expiration time format."}, nil
 			}
+
 			if time.Now().After(t) {
 				return &model.CommandResponse{Text: "Expiration time must be in the future."}, nil
 			}
+
 			expiresAt = &t
 		}
 
@@ -114,6 +118,7 @@ func (p *VotePlugin) ExecuteCommand(_ *plugin.Context, args *model.CommandArgs) 
 		if len(parsedArgs) < 4 {
 			return &model.CommandResponse{Text: "Provide the answer to vote."}, nil
 		}
+
 		voteId, ok := parseUint32(parsedArgs[2])
 		if !ok {
 			return &model.CommandResponse{Text: "Provide the uint32 vote ID greater than zero to vote."}, nil
@@ -133,6 +138,7 @@ func (p *VotePlugin) ExecuteCommand(_ *plugin.Context, args *model.CommandArgs) 
 		if len(parsedArgs) < 3 {
 			return &model.CommandResponse{Text: "Provide the vote ID to get results."}, nil
 		}
+
 		voteId, ok := parseUint32(parsedArgs[2])
 		if !ok {
 			return &model.CommandResponse{Text: "Provide the uint32 vote ID greater than zero to get results."}, nil
@@ -154,6 +160,7 @@ func (p *VotePlugin) ExecuteCommand(_ *plugin.Context, args *model.CommandArgs) 
 		if len(parsedArgs) < 3 {
 			return &model.CommandResponse{Text: "Provide the vote ID to close vote."}, nil
 		}
+
 		voteId, ok := parseUint32(parsedArgs[2])
 		if !ok {
 			return &model.CommandResponse{Text: "Provide the uint32 vote ID greater than zero to close vote."}, nil
@@ -170,6 +177,7 @@ func (p *VotePlugin) ExecuteCommand(_ *plugin.Context, args *model.CommandArgs) 
 		if len(parsedArgs) < 3 {
 			return &model.CommandResponse{Text: "Provide the vote ID to delete vote."}, nil
 		}
+
 		voteId, ok := parseUint32(parsedArgs[2])
 		if !ok {
 			return &model.CommandResponse{Text: "Provide the uint32 vote ID greater than zero to delete vote."}, nil
@@ -223,6 +231,7 @@ func parseUint32(str string) (uint32, bool) {
 	if err != nil || num == 0 {
 		return 0, false
 	}
+
 	return uint32(num), true
 }
 
