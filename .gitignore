@@ -1,0 +1,17 @@
+/bin/
+/obj/
+/vendor/
+/pkg/
+*.exe
+*.test
+*.out
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
+*.conf
+*.yaml
+*.env
+credentials.json
+*.generated.go
